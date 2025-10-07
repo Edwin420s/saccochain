@@ -1,0 +1,30 @@
+{
+  "heroTitle": "Empowering SACCOs with Blockchain-Powered Trust",
+  "heroSubtitle": "Transparent savings, smart loans, and immutable records for Kenya's next-gen SACCOs",
+  "getStarted": "Get Started",
+  "watchDemo": "Watch Demo",
+  "features": "Features",
+  "features": {
+    "hybridBlockchain": {
+      "title": "Hybrid Blockchain",
+      "description": "Combines on-chain transparency with off-chain efficiency for secure and fast operations"
+    },
+    "smartLoans": {
+      "title": "Smart Loan Processing",
+      "description": "AI-powered loan approvals with blockchain-verified credit history"
+    },
+    "creditScoring": {
+      "title": "Advanced Credit Scoring",
+      "description": "Machine learning models that analyze financial behavior for accurate risk assessment"
+    }
+  },
+  "newsletter": {
+    "title": "Stay Updated",
+    "subtitle": "Get the latest news about SACCOChain and blockchain innovation in finance",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  }
+}

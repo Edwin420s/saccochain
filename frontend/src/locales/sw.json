@@ -1,0 +1,31 @@
+// frontend/src/locales/sw.json
+{
+  "heroTitle": "Kuwawezesha SACCOs kwa Imara ya Blockchain",
+  "heroSubtitle": "Akiba uwazi, mikopo mahiri, na rekodi zisizoharibika kwa SACCOs za Kenya",
+  "getStarted": "Anza Sasa",
+  "watchDemo": "Tazama Onyesho",
+  "features": "Vipengele",
+  "features": {
+    "hybridBlockchain": {
+      "title": "Blockchain Mseto",
+      "description": "Inachanganya uwazi wa blockchain na ufanisi wa mfumo wa kawaida kwa operesheni salama na za haraka"
+    },
+    "smartLoans": {
+      "title": "Mikopo Mahiri",
+      "description": "Mikopo inayoidhinishwa na AI kwa historia ya mikopo iliyothibitishwa na blockchain"
+    },
+    "creditScoring": {
+      "title": "Makadirio ya Mikopo",
+      "description": "Miundo ya machine learning inayochambua tabia ya kifedha kwa makadirio sahihi ya hatari"
+    }
+  },
+  "newsletter": {
+    "title": "Kaa Umefahamu",
+    "subtitle": "Pata habari za hivi punde kuhusu SACCOChain na uvumbuzi wa blockchain kwenye fedha",
+    "placeholder": "Weka barua pepe yako",
+    "subscribe": "Jiandikishe"
+  },
+  "footer": {
+    "rights": "Haki zote zimehifadhiwa"
+  }
+}
