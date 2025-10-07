@@ -4,57 +4,74 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     ports:
-      - "3000:3000"
+      - "80:80"
     environment:
-      - VITE_API_URL=http://localhost:3001
+      - VITE_API_URL=https://api.saccochain.com
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    restart: unless-stopped
+    networks:
+      - saccochain-network
 
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     ports:
       - "3001:3001"
     environment:
-      - DATABASE_URL=postgresql://sacco_user:sacco_password@db:5432/saccochain
-      - JWT_SECRET=your-jwt-secret-key
-      - SUI_NODE_URL=https://fullnode.testnet.sui.io:443
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://sacco_user:${DB_PASSWORD}@db:5432/saccochain
+      - JWT_SECRET=${JWT_SECRET}
+      - SUI_NODE_URL=https://fullnode.mainnet.sui.io:443
+      - SUI_PACKAGE_ID=${SUI_PACKAGE_ID}
+      - SUI_PRIVATE_KEY=${SUI_PRIVATE_KEY}
       - AI_SERVICE_URL=http://ai-service:5000
+      - REDIS_URL=redis://redis:6379
     depends_on:
       - db
+      - redis
       - ai-service
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+    restart: unless-stopped
+    networks:
+      - saccochain-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   ai-service:
     build:
       context: ./ai-service
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
+      dockerfile: Dockerfile.prod
     environment:
       - FLASK_ENV=production
-    volumes:
-      - ./ai-service:/app
+    restart: unless-stopped
+    networks:
+      - saccochain-network
 
   db:
-    image: postgres:15
+    image: postgres:15-alpine
     environment:
       - POSTGRES_DB=saccochain
       - POSTGRES_USER=sacco_user
-      - POSTGRES_PASSWORD=sacco_password
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/prisma/migrations:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - saccochain-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sacco_user -d saccochain"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   redis:
     image: redis:7-alpine
@@ -62,6 +79,34 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - saccochain-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./frontend/dist:/usr/share/nginx/html
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    networks:
+      - saccochain-network
+
+networks:
+  saccochain-network:
+    driver: bridge
 
 volumes:
   postgres_data:
