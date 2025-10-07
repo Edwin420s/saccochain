@@ -28,4 +28,16 @@ CREATE OR REPLACE FUNCTION update_user_credit_score()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW."creditScore" IS NOT NULL THEN
-        UPDATE "User"
+        UPDATE "User" 
+        SET "creditScore" = NEW."creditScore"
+        WHERE id = NEW."userId";
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger for automatic credit score updates
+CREATE TRIGGER trigger_update_credit_score
+    AFTER INSERT ON "CreditScore"
+    FOR EACH ROW
+    EXECUTE FUNCTION update_user_credit_score();
