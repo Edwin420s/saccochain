@@ -1,0 +1,72 @@
+// backend/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  nationalId    String?  @unique
+  walletAddress String?  @unique
+  creditScore   Float?   @default(0)
+  role          UserRole @default(MEMBER)
+  saccoId       String?
+  sacco         Sacco?   @relation(fields: [saccoId], references: [id])
+  transactions  Transaction[]
+  creditScores  CreditScore[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Sacco {
+  id        String   @id @default(cuid())
+  name      String
+  licenseNo String   @unique
+  users     User[]
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id        String      @id @default(cuid())
+  type      TransactionType
+  amount    Float
+  status    TransactionStatus @default(PENDING)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  createdAt DateTime    @default(now())
+}
+
+model CreditScore {
+  id          String   @id @default(cuid())
+  score       Float
+  riskLevel   String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  onChainHash String?
+  createdAt   DateTime @default(now())
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+  AUDITOR
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  LOAN
+  REPAYMENT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
