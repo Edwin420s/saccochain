@@ -251,4 +251,47 @@ const ActivityItem = ({ transaction }) => {
       case 'DEPOSIT': return '💰';
       case 'WITHDRAWAL': return '💸';
       case 'LOAN': return '🏦';
-      case 'REPAYMENT':
+      case 'REPAYMENT': return '🔄';
+      default: return '💳';
+    }
+  };
+
+  const getActivityColor = (type) => {
+    return type === 'DEPOSIT' || type === 'LOAN' 
+      ? 'text-green-600 dark:text-green-400' 
+      : 'text-red-600 dark:text-red-400';
+  };
+
+  return (
+    <div className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+      <div className="flex items-center space-x-3">
+        <span className="text-2xl">{getActivityIcon(transaction.type)}</span>
+        <div>
+          <p className="font-medium text-gray-900 dark:text-white capitalize">
+            {transaction.type.toLowerCase()}
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {new Date(transaction.createdAt).toLocaleDateString()}
+          </p>
+        </div>
+      </div>
+      <div className="text-right">
+        <p className={`font-semibold ${getActivityColor(transaction.type)}`}>
+          {transaction.type === 'DEPOSIT' || transaction.type === 'LOAN' ? '+' : '-'}
+          KES {transaction.amount.toLocaleString()}
+        </p>
+        <span className={`status-badge ${
+          transaction.status === 'COMPLETED' 
+            ? 'status-success'
+            : transaction.status === 'PENDING'
+            ? 'status-warning'
+            : 'status-error'
+        }`}>
+          {transaction.status}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default EnhancedDashboard;
