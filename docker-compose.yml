@@ -1,38 +1,68 @@
 version: '3.8'
+
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:3001
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     environment:
-      - DATABASE_URL=postgresql://user:pass@db:5432/saccochain
-      - JWT_SECRET=your-jwt-secret
+      - DATABASE_URL=postgresql://sacco_user:sacco_password@db:5432/saccochain
+      - JWT_SECRET=your-jwt-secret-key
       - SUI_NODE_URL=https://fullnode.testnet.sui.io:443
+      - AI_SERVICE_URL=http://ai-service:5000
     depends_on:
       - db
+      - ai-service
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
 
   ai-service:
-    build: ./ai-service
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     environment:
-      - MODEL_PATH=/app/model/credit_model.pkl
+      - FLASK_ENV=production
+    volumes:
+      - ./ai-service:/app
 
   db:
     image: postgres:15
     environment:
       - POSTGRES_DB=saccochain
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=sacco_user
+      - POSTGRES_PASSWORD=sacco_password
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./backend/prisma/migrations:/docker-entrypoint-initdb.d
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   postgres_data:
+  redis_data:
