@@ -1,4 +1,32 @@
 {
+  "nav": {
+    "dashboard": "Dashibodi",
+    "admin": "Msimamizi",
+    "profile": "Wasifu Wako",
+    "signOut": "Toka"
+  },
+  "login": {
+    "title": "Ingia kwenye akaunti yako",
+    "subtitle": "Au",
+    "createAccount": "unda akaunti mpya",
+    "email": "Anwani ya barua pepe",
+    "password": "Nenosiri",
+    "signIn": "Ingia"
+  },
+  "register": {
+    "title": "Undi akaunti yako",
+    "subtitle": "Au",
+    "signIn": "ingia kwenye akaunti yako",
+    "fullName": "Jina kamili",
+    "email": "Anwani ya barua pepe",
+    "nationalId": "Kitambulisho cha taifa",
+    "saccoId": "Kitambulisho cha SACCO (Hiari)",
+    "password": "Nenosiri",
+    "confirmPassword": "Thibitisha nenosiri",
+    "createAccount": "Undi akaunti",
+    "passwordsNoMatch": "Nenosiri halifanani",
+    "passwordTooShort": "Nenosiri lazima liwe na herufi angalau 6"
+  },
   "heroTitle": "Kuwawezesha SACCOs kwa Imara ya Blockchain",
   "heroSubtitle": "Akiba uwazi, mikopo mahiri, na rekodi zisizoharibika kwa SACCOs za Kenya",
   "getStarted": "Anza Sasa",
@@ -26,5 +54,30 @@
   },
   "footer": {
     "rights": "Haki zote zimehifadhiwa"
+  },
+  "dashboard": {
+    "welcome": "Karibu tena, {{name}}!",
+    "overview": "Hapa kuna muhtasari wa kifedha wako",
+    "creditScore": "Alama ya Mikopo",
+    "quickStats": "Takwimu za Haraka",
+    "totalTransactions": "Jumla ya Manunuzi",
+    "memberSince": "Mwanachama Tangu",
+    "blockchainVerification": "Uthibitishaji wa Blockchain",
+    "scoreVerified": "Alama imethibitishwa kwenye blockchain",
+    "pendingVerification": "Inasubiri uthibitishaji wa blockchain",
+    "calculateNewScore": "Kokotoa Alama Mpya",
+    "noScore": "Hakuna alama ya mikopo iliyokokotolewa bado"
+  },
+  "admin": {
+    "title": "Dashibodi ya Msimamizi",
+    "saccos": "SACCOs",
+    "users": "Watumiaji",
+    "analytics": "Takwimu",
+    "statistics": "Takwimu",
+    "totalSaccos": "Jumla ya SACCOs",
+    "totalUsers": "Jumla ya Watumiaji",
+    "totalTransactions": "Jumla ya Manunuzi",
+    "averageCreditScore": "Wastani wa Alama ya Mikopo",
+    "recentRegistrations": "Usajili wa Hivi Karibuni"
   }
 }

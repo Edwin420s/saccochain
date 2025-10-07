@@ -157,4 +157,103 @@ router.get('/users', requireAdmin, async (req, res) => {
 router.patch('/users/:userId/role', requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
-    const { role } = req
+    const { role } = req.body;
+
+    if (!['ADMIN', 'MEMBER', 'AUDITOR'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { role },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true
+      }
+    });
+
+    res.json({
+      message: 'User role updated successfully',
+      user
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update user role' });
+  }
+});
+
+// Get system analytics
+router.get('/analytics', requireAdmin, async (req, res) => {
+  try {
+    const [
+      dailyRegistrations,
+      creditScoreDistribution,
+      transactionStats,
+      saccoPerformance
+    ] = await Promise.all([
+      // Daily registrations for the last 30 days
+      prisma.user.groupBy({
+        by: ['createdAt'],
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+          }
+        },
+        _count: {
+          id: true
+        }
+      }),
+
+      // Credit score distribution
+      prisma.user.groupBy({
+        by: ['creditScore'],
+        _count: {
+          id: true
+        },
+        orderBy: {
+          creditScore: 'asc'
+        }
+      }),
+
+      // Transaction statistics
+      prisma.transaction.groupBy({
+        by: ['type', 'status'],
+        _count: {
+          id: true
+        },
+        _sum: {
+          amount: true
+        }
+      }),
+
+      // SACCO performance
+      prisma.sacco.findMany({
+        select: {
+          name: true,
+          users: {
+            select: {
+              creditScore: true
+            }
+          }
+        }
+      })
+    ]);
+
+    res.json({
+      dailyRegistrations,
+      creditScoreDistribution,
+      transactionStats,
+      saccoPerformance: saccoPerformance.map(sacco => ({
+        name: sacco.name,
+        averageScore: sacco.users.reduce((sum, user) => sum + (user.creditScore || 0), 0) / sacco.users.length,
+        memberCount: sacco.users.length
+      }))
+    });
+  } catch (error) {
+    console.error('Analytics error:', error);
+    res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+});
+
+module.exports = router;

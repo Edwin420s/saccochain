@@ -1,4 +1,32 @@
 {
+  "nav": {
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "profile": "Your Profile",
+    "signOut": "Sign out"
+  },
+  "login": {
+    "title": "Sign in to your account",
+    "subtitle": "Or",
+    "createAccount": "create a new account",
+    "email": "Email address",
+    "password": "Password",
+    "signIn": "Sign in"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Or",
+    "signIn": "sign in to your account",
+    "fullName": "Full name",
+    "email": "Email address",
+    "nationalId": "National ID",
+    "saccoId": "SACCO ID (Optional)",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "createAccount": "Create account",
+    "passwordsNoMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters"
+  },
   "heroTitle": "Empowering SACCOs with Blockchain-Powered Trust",
   "heroSubtitle": "Transparent savings, smart loans, and immutable records for Kenya's next-gen SACCOs",
   "getStarted": "Get Started",
@@ -26,5 +54,30 @@
   },
   "footer": {
     "rights": "All rights reserved"
+  },
+  "dashboard": {
+    "welcome": "Welcome back, {{name}}!",
+    "overview": "Here's your financial overview",
+    "creditScore": "Credit Score",
+    "quickStats": "Quick Stats",
+    "totalTransactions": "Total Transactions",
+    "memberSince": "Member Since",
+    "blockchainVerification": "Blockchain Verification",
+    "scoreVerified": "Score verified on-chain",
+    "pendingVerification": "Pending blockchain verification",
+    "calculateNewScore": "Calculate New Score",
+    "noScore": "No credit score calculated yet"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "saccos": "SACCOs",
+    "users": "Users",
+    "analytics": "Analytics",
+    "statistics": "Statistics",
+    "totalSaccos": "Total SACCOs",
+    "totalUsers": "Total Users",
+    "totalTransactions": "Total Transactions",
+    "averageCreditScore": "Average Credit Score",
+    "recentRegistrations": "Recent Registrations"
   }
 }
