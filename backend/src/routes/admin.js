@@ -1,27 +1,12 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const { authenticateToken, requireAdmin } = require('../middleware/authMiddleware');
+const { successResponse, errorResponse } = require('../utils/responseHandler');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Middleware to check if user is admin
-const requireAdmin = async (req, res, next) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.userId }
-    });
-
-    if (!user || user.role !== 'ADMIN') {
-      return res.status(403).json({ error: 'Admin access required' });
-    }
-
-    next();
-  } catch (error) {
-    res.status(500).json({ error: 'Authentication failed' });
-  }
-};
-
 // Get all SACCOs
-router.get('/saccos', requireAdmin, async (req, res) => {
+router.get('/saccos', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const saccos = await prisma.sacco.findMany({
       include: {
@@ -35,21 +20,23 @@ router.get('/saccos', requireAdmin, async (req, res) => {
         },
         _count: {
           select: {
-            users: true
+            users: true,
+            transactions: true
           }
         }
       },
       orderBy: { createdAt: 'desc' }
     });
 
-    res.json(saccos);
+    successResponse(res, saccos);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch SACCOs' });
+    console.error('Error fetching SACCOs:', error);
+    errorResponse(res, 'Failed to fetch SACCOs');
   }
 });
 
-// Get SACCO statistics
-router.get('/stats', requireAdmin, async (req, res) => {
+// Get system statistics
+router.get('/stats', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const [
       totalSaccos,
@@ -83,7 +70,7 @@ router.get('/stats', requireAdmin, async (req, res) => {
       })
     ]);
 
-    res.json({
+    successResponse(res, {
       totalSaccos,
       totalUsers,
       totalTransactions,
@@ -91,23 +78,25 @@ router.get('/stats', requireAdmin, async (req, res) => {
       recentRegistrations
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch statistics' });
+    console.error('Error fetching statistics:', error);
+    errorResponse(res, 'Failed to fetch statistics');
   }
 });
 
-// Get all users with pagination
-router.get('/users', requireAdmin, async (req, res) => {
+// Get all users with pagination and search
+router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const { page = 1, limit = 20, search = '' } = req.query;
+    const { page = 1, limit = 20, search = '', saccoId } = req.query;
     const skip = (page - 1) * limit;
 
-    const where = search ? {
-      OR: [
+    const where = {
+      OR: search ? [
         { name: { contains: search, mode: 'insensitive' } },
         { email: { contains: search, mode: 'insensitive' } },
         { nationalId: { contains: search, mode: 'insensitive' } }
-      ]
-    } : {};
+      ] : undefined,
+      saccoId: saccoId || undefined
+    };
 
     const [users, total] = await Promise.all([
       prisma.user.findMany({
@@ -130,7 +119,8 @@ router.get('/users', requireAdmin, async (req, res) => {
           createdAt: true,
           _count: {
             select: {
-              transactions: true
+              transactions: true,
+              creditScores: true
             }
           }
         },
@@ -139,7 +129,7 @@ router.get('/users', requireAdmin, async (req, res) => {
       prisma.user.count({ where })
     ]);
 
-    res.json({
+    successResponse(res, {
       users,
       pagination: {
         page: parseInt(page),
@@ -149,18 +139,19 @@ router.get('/users', requireAdmin, async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch users' });
+    console.error('Error fetching users:', error);
+    errorResponse(res, 'Failed to fetch users');
   }
 });
 
 // Update user role
-router.patch('/users/:userId/role', requireAdmin, async (req, res) => {
+router.patch('/users/:userId/role', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const { role } = req.body;
 
     if (!['ADMIN', 'MEMBER', 'AUDITOR'].includes(role)) {
-      return res.status(400).json({ error: 'Invalid role' });
+      return errorResponse(res, 'Invalid role', 400);
     }
 
     const user = await prisma.user.update({
@@ -174,18 +165,19 @@ router.patch('/users/:userId/role', requireAdmin, async (req, res) => {
       }
     });
 
-    res.json({
-      message: 'User role updated successfully',
-      user
-    });
+    successResponse(res, user, 'User role updated successfully');
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update user role' });
+    console.error('Error updating user role:', error);
+    errorResponse(res, 'Failed to update user role');
   }
 });
 
 // Get system analytics
-router.get('/analytics', requireAdmin, async (req, res) => {
+router.get('/analytics', authenticateToken, requireAdmin, async (req, res) => {
   try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
     const [
       dailyRegistrations,
       creditScoreDistribution,
@@ -197,7 +189,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
         by: ['createdAt'],
         where: {
           createdAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+            gte: thirtyDaysAgo
           }
         },
         _count: {
@@ -230,29 +222,100 @@ router.get('/analytics', requireAdmin, async (req, res) => {
       // SACCO performance
       prisma.sacco.findMany({
         select: {
+          id: true,
           name: true,
           users: {
             select: {
               creditScore: true
+            }
+          },
+          _count: {
+            select: {
+              users: true,
+              transactions: true
             }
           }
         }
       })
     ]);
 
-    res.json({
-      dailyRegistrations,
-      creditScoreDistribution,
-      transactionStats,
-      saccoPerformance: saccoPerformance.map(sacco => ({
-        name: sacco.name,
-        averageScore: sacco.users.reduce((sum, user) => sum + (user.creditScore || 0), 0) / sacco.users.length,
-        memberCount: sacco.users.length
-      }))
-    });
+    // Process analytics data
+    const processedAnalytics = {
+      dailyRegistrations: dailyRegistrations.map(day => ({
+        date: day.createdAt.toISOString().split('T')[0],
+        count: day._count.id
+      })),
+      creditScoreDistribution: creditScoreDistribution
+        .filter(score => score.creditScore !== null)
+        .map(score => ({
+          score: score.creditScore,
+          count: score._count.id
+        })),
+      transactionStats: transactionStats.reduce((acc, stat) => {
+        if (!acc[stat.type]) acc[stat.type] = {};
+        acc[stat.type][stat.status] = {
+          count: stat._count.id,
+          amount: stat._sum.amount || 0
+        };
+        return acc;
+      }, {}),
+      saccoPerformance: saccoPerformance.map(sacco => {
+        const scores = sacco.users.map(user => user.creditScore).filter(score => score !== null);
+        const averageScore = scores.length > 0 
+          ? scores.reduce((sum, score) => sum + score, 0) / scores.length 
+          : 0;
+
+        return {
+          id: sacco.id,
+          name: sacco.name,
+          averageScore: Math.round(averageScore),
+          memberCount: sacco._count.users,
+          transactionCount: sacco._count.transactions
+        };
+      })
+    };
+
+    successResponse(res, processedAnalytics);
   } catch (error) {
     console.error('Analytics error:', error);
-    res.status(500).json({ error: 'Failed to fetch analytics' });
+    errorResponse(res, 'Failed to fetch analytics');
+  }
+});
+
+// Get user details for admin
+router.get('/users/:userId', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        sacco: true,
+        transactions: {
+          take: 10,
+          orderBy: { createdAt: 'desc' }
+        },
+        creditScores: {
+          take: 5,
+          orderBy: { createdAt: 'desc' }
+        },
+        _count: {
+          select: {
+            transactions: true,
+            creditScores: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      return errorResponse(res, 'User not found', 404);
+    }
+
+    successResponse(res, user);
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    errorResponse(res, 'Failed to fetch user details');
   }
 });
 
