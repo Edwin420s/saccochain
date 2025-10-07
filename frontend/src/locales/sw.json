@@ -79,5 +79,24 @@
     "totalTransactions": "Jumla ya Manunuzi",
     "averageCreditScore": "Wastani wa Alama ya Mikopo",
     "recentRegistrations": "Usajili wa Hivi Karibuni"
+  },
+  "wallet": {
+    "connect": "Unganisha Wallet",
+    "disconnect": "Tenganisha",
+    "connected": "Imeunganishwa",
+    "notConnected": "Haijaunganishwa",
+    "installWallet": "Tafadhali weka programu ya kuongeza wallet ya Sui"
+  },
+  "transaction": {
+    "create": "Unda Manunuzi",
+    "type": "Aina",
+    "amount": "Kiasi",
+    "description": "Maelezo",
+    "date": "Tarehe",
+    "status": "Hali",
+    "deposit": "Amana",
+    "withdrawal": "Utoaji",
+    "loan": "Mkopo",
+    "repayment": "Malipo"
   }
 }
