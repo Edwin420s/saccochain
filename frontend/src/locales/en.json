@@ -79,5 +79,24 @@
     "totalTransactions": "Total Transactions",
     "averageCreditScore": "Average Credit Score",
     "recentRegistrations": "Recent Registrations"
+  },
+  "wallet": {
+    "connect": "Connect Wallet",
+    "disconnect": "Disconnect",
+    "connected": "Connected",
+    "notConnected": "Not Connected",
+    "installWallet": "Please install a Sui wallet extension"
+  },
+  "transaction": {
+    "create": "Create Transaction",
+    "type": "Type",
+    "amount": "Amount",
+    "description": "Description",
+    "date": "Date",
+    "status": "Status",
+    "deposit": "Deposit",
+    "withdrawal": "Withdrawal",
+    "loan": "Loan",
+    "repayment": "Repayment"
   }
 }
