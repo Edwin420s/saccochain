@@ -1,4 +1,3 @@
-// backend/src/routes/sacco.js
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const router = express.Router();

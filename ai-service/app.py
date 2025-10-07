@@ -1,4 +1,3 @@
-# ai-service/app.py
 from flask import Flask, request, jsonify
 from sklearn.ensemble import RandomForestRegressor
 import pandas as pd

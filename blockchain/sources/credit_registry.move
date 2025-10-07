@@ -1,4 +1,3 @@
-// blockchain/sources/credit_registry.move
 module saccochain::credit_registry {
     use std::signer;
     use sui::object::{Self, UID};
