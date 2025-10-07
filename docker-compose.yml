@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db:5432/saccochain
+      - JWT_SECRET=your-jwt-secret
+      - SUI_NODE_URL=https://fullnode.testnet.sui.io:443
+    depends_on:
+      - db
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "5000:5000"
+    environment:
+      - MODEL_PATH=/app/model/credit_model.pkl
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=saccochain
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
