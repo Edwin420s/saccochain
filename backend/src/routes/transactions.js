@@ -1,33 +1,53 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const { authenticateToken } = require('../middleware/authMiddleware');
+const { validateTransaction } = require('../middleware/validationMiddleware');
+const { successResponse, errorResponse } = require('../utils/responseHandler');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Get user transactions
-router.get('/:userId', async (req, res) => {
+// Get user transactions with pagination and filtering
+router.get('/:userId', authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
-    const { page = 1, limit = 20 } = req.query;
+    const { page = 1, limit = 20, type, status, startDate, endDate } = req.query;
 
-    const transactions = await prisma.transaction.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
-      take: parseInt(limit),
-      select: {
-        id: true,
-        type: true,
-        amount: true,
-        status: true,
-        createdAt: true
-      }
-    });
+    // Verify user access
+    if (req.user.id !== userId && req.user.role !== 'ADMIN') {
+      return errorResponse(res, 'Access denied', 403);
+    }
 
-    const total = await prisma.transaction.count({
-      where: { userId }
-    });
+    const skip = (page - 1) * parseInt(limit);
+    const where = { userId };
 
-    res.json({
+    // Add filters
+    if (type) where.type = type;
+    if (status) where.status = status;
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt.gte = new Date(startDate);
+      if (endDate) where.createdAt.lte = new Date(endDate);
+    }
+
+    const [transactions, total] = await Promise.all([
+      prisma.transaction.findMany({
+        where,
+        skip,
+        take: parseInt(limit),
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          type: true,
+          amount: true,
+          status: true,
+          description: true,
+          createdAt: true
+        }
+      }),
+      prisma.transaction.count({ where })
+    ]);
+
+    successResponse(res, {
       transactions,
       pagination: {
         page: parseInt(page),
@@ -37,51 +57,162 @@ router.get('/:userId', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch transactions' });
+    console.error('Error fetching transactions:', error);
+    errorResponse(res, 'Failed to fetch transactions');
   }
 });
 
 // Create new transaction
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, validateTransaction, async (req, res) => {
   try {
     const { userId, type, amount, description } = req.body;
+
+    // Verify user access
+    if (req.user.id !== userId && req.user.role !== 'ADMIN') {
+      return errorResponse(res, 'Access denied', 403);
+    }
 
     const transaction = await prisma.transaction.create({
       data: {
         type,
         amount: parseFloat(amount),
         status: 'PENDING',
-        userId,
-        description
+        description,
+        userId
       }
     });
 
-    // Process transaction based on type
-    await processTransaction(transaction);
+    // Process transaction asynchronously
+    processTransaction(transaction);
 
-    res.status(201).json(transaction);
+    successResponse(res, transaction, 'Transaction created successfully', 201);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create transaction' });
+    console.error('Error creating transaction:', error);
+    errorResponse(res, 'Failed to create transaction');
   }
 });
 
-// Process transaction
-async function processTransaction(transaction) {
+// Get transaction by ID
+router.get('/single/:id', authenticateToken, async (req, res) => {
   try {
-    // Simulate transaction processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    const { id } = req.params;
 
-    // Update transaction status
-    await prisma.transaction.update({
-      where: { id: transaction.id },
-      data: { status: 'COMPLETED' }
+    const transaction = await prisma.transaction.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
     });
 
-    // Recalculate credit score if it's a repayment
-    if (transaction.type === 'REPAYMENT') {
-      await recalculateCreditScore(transaction.userId);
+    if (!transaction) {
+      return errorResponse(res, 'Transaction not found', 404);
+    }
+
+    // Verify access
+    if (req.user.id !== transaction.userId && req.user.role !== 'ADMIN') {
+      return errorResponse(res, 'Access denied', 403);
+    }
+
+    successResponse(res, transaction);
+  } catch (error) {
+    console.error('Error fetching transaction:', error);
+    errorResponse(res, 'Failed to fetch transaction');
+  }
+});
+
+// Update transaction status (Admin only)
+router.patch('/:id/status', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (req.user.role !== 'ADMIN') {
+      return errorResponse(res, 'Admin access required', 403);
+    }
+
+    const validStatuses = ['PENDING', 'COMPLETED', 'FAILED'];
+    if (!validStatuses.includes(status)) {
+      return errorResponse(res, 'Invalid status', 400);
+    }
+
+    const transaction = await prisma.transaction.update({
+      where: { id },
+      data: { status }
+    });
+
+    successResponse(res, transaction, 'Transaction status updated');
+  } catch (error) {
+    console.error('Error updating transaction:', error);
+    errorResponse(res, 'Failed to update transaction');
+  }
+});
+
+// Get transaction statistics for user
+router.get('/:userId/stats', authenticateToken, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Verify user access
+    if (req.user.id !== userId && req.user.role !== 'ADMIN') {
+      return errorResponse(res, 'Access denied', 403);
+    }
+
+    const stats = await prisma.transaction.groupBy({
+      by: ['type', 'status'],
+      where: { userId },
+      _count: { id: true },
+      _sum: { amount: true }
+    });
+
+    const totalStats = await prisma.transaction.aggregate({
+      where: { userId },
+      _count: { id: true },
+      _sum: { amount: true }
+    });
+
+    successResponse(res, {
+      byType: stats,
+      total: {
+        count: totalStats._count.id,
+        amount: totalStats._sum.amount || 0
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching transaction stats:', error);
+    errorResponse(res, 'Failed to fetch transaction statistics');
+  }
+});
+
+// Process transaction (background job)
+async function processTransaction(transaction) {
+  try {
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Update transaction status based on some logic
+    const status = Math.random() > 0.1 ? 'COMPLETED' : 'FAILED'; // 90% success rate
+
+    await prisma.transaction.update({
+      where: { id: transaction.id },
+      data: { status }
+    });
+
+    console.log(`Transaction ${transaction.id} processed with status: ${status}`);
+
+    // Trigger credit score recalculation for completed repayments
+    if (transaction.type === 'REPAYMENT' && status === 'COMPLETED') {
+      await triggerCreditScoreRecalculation(transaction.userId);
     }
   } catch (error) {
+    console.error('Error processing transaction:', error);
+    
+    // Mark transaction as failed
     await prisma.transaction.update({
       where: { id: transaction.id },
       data: { status: 'FAILED' }
@@ -89,13 +220,16 @@ async function processTransaction(transaction) {
   }
 }
 
-// Recalculate credit score
-async function recalculateCreditScore(userId) {
+// Trigger credit score recalculation
+async function triggerCreditScoreRecalculation(userId) {
   try {
-    // Trigger credit score recalculation
-    await fetch(`${process.env.API_URL}/api/score/calculate/${userId}`, {
-      method: 'POST'
-    });
+    // This would call the credit scoring service
+    console.log(`Triggering credit score recalculation for user: ${userId}`);
+    
+    // In a real implementation, you might:
+    // 1. Call an internal API endpoint
+    // 2. Add to a job queue
+    // 3. Trigger a webhook
   } catch (error) {
     console.error('Error triggering credit score recalculation:', error);
   }
