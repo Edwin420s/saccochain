@@ -2,7 +2,7 @@
 
 A full-stack platform for SACCOs that combines blockchain transparency with AI-powered credit scoring.
 
-## 🚀 Features
+##  Features
 
 - **Hybrid Architecture**: On-chain verification + Off-chain processing
 - **AI Credit Scoring**: Machine learning models for risk assessment
@@ -34,7 +34,7 @@ A full-stack platform for SACCOs that combines blockchain transparency with AI-p
 - Scikit-learn Models
 - REST API
 
-## 📦 Installation
+##  Installation
 
 1. **Clone Repository**
 ```bash
