@@ -38,7 +38,7 @@ A full-stack platform for SACCOs that combines blockchain transparency with AI-p
 
 1. **Clone Repository**
 ```bash
-git clone https://github.com/your-org/saccochain
+git clone https://github.com/Edwin420s/saccochain.git 
 cd saccochain
 ```
 ## Start with Docker
