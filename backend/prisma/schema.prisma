@@ -21,6 +21,7 @@ model User {
   creditScores  CreditScore[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  password      String
 }
 
 model Sacco {
@@ -39,6 +40,7 @@ model Transaction {
   userId    String
   user      User        @relation(fields: [userId], references: [id])
   createdAt DateTime    @default(now())
+  description String?
 }
 
 model CreditScore {
@@ -49,6 +51,12 @@ model CreditScore {
   user        User     @relation(fields: [userId], references: [id])
   onChainHash String?
   createdAt   DateTime @default(now())
+}
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }
 
 enum UserRole {

@@ -122,6 +122,11 @@ export const suiAPI = {
     api.get(`/api/sui/wallet/${walletAddress}/transactions`),
 };
 
+// Newsletter API
+export const newsletterAPI = {
+  subscribe: (email) => api.post('/api/newsletter/subscribe', { email }),
+};
+
 // Health check
 export const healthCheck = () => 
   api.get('/health');
