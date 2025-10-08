@@ -89,32 +89,64 @@ Data persists in Prisma models: `User`, `Sacco`, `Transaction`, `CreditScore`, `
 
 ## 6) Project Structure
 
-- **Root**
-  - `docker-compose.yml`, `nginx/`, `scripts/`, `blockchain/`, `frontend/`, `backend/`, `ai-service/`
-- **Backend (`backend/`)**
-  - `src/routes/`: `auth.js`, `sacco.js`, `score.js`, `sui.js`, `transactions.js`, `admin.js`, `newsletter.js`
-  - `src/middleware/`: auth, validation, security, error handler
-  - `src/services/`: `suiService.js`, `blockchainService.js`, `blockchainEventListener.js`
-  - `prisma/schema.prisma`: models (User, Sacco, Transaction, CreditScore, NewsletterSubscription)
-  - `prisma/seed.js`: sample SACCOs, users, transactions, scores
-- **Frontend (`frontend/`)**
-  - `src/pages/`: `LandingPage.jsx`, `Login.jsx`, `Register.jsx`, `EnhancedDashboard.jsx`, `AdminPanel.jsx`
-  - `src/services/api.js`: Auth, SACCO, Score, Transactions, Admin, Sui, Newsletter clients
-  - `src/i18n.js`, `src/locales/`
-- **AI Service (`ai-service/`)**
-  - `app.py` (Flask app)
-  - `train_model.py` (training script)
-  - `Dockerfile` and `Dockerfile.prod`
-- **Blockchain (`blockchain/`)**
-  - `sources/*.move`, `scripts/*.js`, `Move.toml`
+```text
+saccochain/
+├─ README.md                      # Project overview, setup, architecture, APIs
+├─ docker-compose.yml             # Orchestrates FE, BE, AI, DB, Redis, Nginx
+├─ .env.example                   # Compose-level env template (secrets/overrides)
 
-## 7) Environment Variables
+├─ backend/                       # Node.js + Express API (Prisma, Redis, Sui)
+│  ├─ package.json
+│  ├─ Dockerfile
+│  ├─ Dockerfile.prod
+│  ├─ .env.example
+│  ├─ prisma/
+│  │  ├─ schema.prisma            # Models: User, Sacco, Transaction, CreditScore, NewsletterSubscription
+│  │  ├─ migrations/              # Prisma migrations
+│  │  └─ seed.js                  # Seeds demo data
+│  └─ src/
+│     ├─ server.js                # Server bootstrap & DB check
+│     ├─ app.js                   # Express app & route mounts
+│     ├─ routes/                  # API routes (auth/sacco/score/sui/transactions/admin/newsletter)
+│     ├─ middleware/              # Auth, validation, security, errors
+│     ├─ services/                # Sui & blockchain helpers
+│     ├─ utils/                   # Logger/response helpers (extensible)
+│     ├─ health/                  # Health endpoints (extensible)
+│     └─ jobs/                    # Background workers (extensible)
 
-- **Backend (`backend/.env`)**
-  - `DATABASE_URL=postgresql://user:pass@host:5432/saccochain`
-  - `JWT_SECRET=your-strong-secret`
-  - `AI_SERVICE_URL=http://ai-service:5000`
-  - `REDIS_URL=redis://redis:6379`
+├─ frontend/                      # React + Vite + Tailwind UI
+│  ├─ package.json
+│  ├─ Dockerfile
+│  ├─ Dockerfile.prod
+│  ├─ index.html
+│  ├─ vite.config.js
+│  ├─ tailwind.config.js
+│  ├─ .env.example
+│  └─ src/
+│     ├─ main.jsx                 # App bootstrap
+│     ├─ App.jsx                  # Routes and guards
+│     ├─ pages/                   # Pages (Landing, Login, Register, Dashboards)
+│     ├─ components/              # Reusable UI (Navbar, cards, modals)
+│     ├─ context/                 # AuthContext
+│     ├─ services/                # api.js (Auth/SACCO/Score/Tx/Admin/Sui/Newsletter)
+│     ├─ locales/                 # i18n translations (en, sw)
+│     └─ i18n.js                  # i18n setup
+
+├─ ai-service/                    # Flask microservice for credit scoring
+│  ├─ app.py                      # /api/health, /api/score
+│  ├─ train_model.py              # Model training & artifacts
+│  ├─ requirements.txt
+│  ├─ Dockerfile
+│  └─ Dockerfile.prod
+
+├─ blockchain/                    # Sui Move contracts & scripts
+│  ├─ Move.toml
+│  ├─ sources/                    # sacco_registry.move, credit_registry.move, credit_oracle.move
+│  └─ scripts/                    # deploy.js, test-contracts.js
+
+├─ nginx/
+│  ├─ nginx.conf                  # SPA + /api reverse proxy, security headers, gzip
+│  └─ ssl/                        # saccochain.crt, saccochain.key (production)
   - `SUI_NODE_URL=https://fullnode.mainnet.sui.io:443` (or testnet)
   - `SUI_PACKAGE_ID=0x...` (after deploy)
   - `SUI_PRIVATE_KEY=...`
