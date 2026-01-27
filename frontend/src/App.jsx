@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import EnhancedDashboard from './pages/EnhancedDashboard';
 import AdminPanel from './pages/AdminPanel';
+import VerifyMember from './pages/VerifyMember';
 import Navbar from './components/Navbar';
 import './i18n';
 import './index.css';
