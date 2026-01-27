@@ -112,6 +112,16 @@ function AppContent() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/verify"
+        element={
+          <ProtectedRoute requireAdmin={true}>
+            <AuthenticatedLayout>
+              <VerifyMember />
+            </AuthenticatedLayout>
+          </ProtectedRoute>
+        }
+      />
 
       {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" replace />} />
