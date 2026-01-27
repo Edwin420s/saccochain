@@ -2,95 +2,102 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import ChatbotWidget from '../components/ChatbotWidget';
 
 const LandingPage = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const [darkMode, setDarkMode] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
+  const { theme, toggleTheme, isDark } = useTheme();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscribeError, setSubscribeError] = useState('');
 
-  useEffect(() => {
-    // Check system preference for dark mode
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDarkMode(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
-
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
-      setEmail('');
-      setTimeout(() => setIsSubscribed(false), 3000);
+    setSubscribeError('');
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setSubscribeError('Please enter a valid email address');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/newsletter/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      if (response.ok) {
+        setIsSubscribed(true);
+        setEmail('');
+        setTimeout(() => setIsSubscribed(false), 5000);
+      } else {
+        setSubscribeError(t('newsletter.error'));
+      }
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      setSubscribeError(t('newsletter.error'));
     }
   };
 
   const features = [
     {
       icon: '🔗',
-      title: t('features.hybridBlockchain.title'),
-      description: t('features.hybridBlockchain.description')
+      title: t('featuresSection.interSacco.title'),
+      description: t('featuresSection.interSacco.description')
+    },
+    {
+      icon: '⚡',
+      title: t('featuresSection.hybridBlockchain.title'),
+      description: t('featuresSection.hybridBlockchain.description')
     },
     {
       icon: '💳',
-      title: t('features.smartLoans.title'),
-      description: t('features.smartLoans.description')
+      title: t('featuresSection.smartLoans.title'),
+      description: t('featuresSection.smartLoans.description')
     },
     {
-      icon: '📊',
-      title: t('features.creditScoring.title'),
-      description: t('features.creditScoring.description')
+      icon: '🧠',
+      title: t('featuresSection.creditScoring.title'),
+      description: t('featuresSection.creditScoring.description')
     },
     {
       icon: '🔒',
-      title: 'Secure & Transparent',
-      description: 'Bank-grade security with complete transaction transparency on blockchain'
+      title: t('featuresSection.dataPrivacy.title'),
+      description: t('featuresSection.dataPrivacy.description')
     },
     {
-      icon: '🚀',
-      title: 'Fast Processing',
-      description: 'AI-powered instant loan approvals and real-time credit scoring'
-    },
-    {
-      icon: '🌍',
-      title: 'Multi-Language',
-      description: 'Available in English and Swahili for better accessibility'
+      icon: '📱',
+      title: t('featuresSection.portableCredit.title'),
+      description: t('featuresSection.portableCredit.description')
     }
   ];
 
   const steps = [
     {
-      number: '1',
-      title: 'Join a SACCO',
-      description: 'Register with your preferred SACCO on our platform',
+      number: t('howItWorks.step1.number'),
+      title: t('howItWorks.step1.title'),
+      description: t('howItWorks.step1.description'),
       icon: '👥'
     },
     {
-      number: '2',
-      title: 'Build Credit',
-      description: 'Start saving and build your credit history with transparent transactions',
-      icon: '💵'
+      number: t('howItWorks.step2.number'),
+      title: t('howItWorks.step2.title'),
+      description: t('howItWorks.step2.description'),
+      icon: '💰'
     },
     {
-      number: '3',
-      title: 'Get Approved',
-      description: 'Receive instant loan approvals with AI-powered credit scoring',
-      icon: '✅'
+      number: t('howItWorks.step3.number'),
+      title: t('howItWorks.step3.title'),
+      description: t('howItWorks.step3.description'),
+      icon: '⚡'
     },
     {
-      number: '4',
-      title: 'Grow Together',
-      description: 'Watch your financial health improve with blockchain-verified records',
+      number: t('howItWorks.step4.number'),
+      title: t('howItWorks.step4.title'),
+      description: t('howItWorks.step4.description'),
       icon: '📈'
     }
   ];
@@ -133,7 +140,7 @@ const LandingPage = () => {
                 </span>
               </div>
             </div>
-            
+
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
               <a href="#features" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
@@ -145,7 +152,7 @@ const LandingPage = () => {
               <a href="#technology" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 Technology
               </a>
-              
+
               {/* Language Toggle */}
               <button
                 onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'sw' : 'en')}
@@ -153,15 +160,16 @@ const LandingPage = () => {
               >
                 {i18n.language === 'en' ? 'SW' : 'EN'}
               </button>
-              
+
               {/* Dark Mode Toggle */}
               <button
-                onClick={() => setDarkMode(!darkMode)}
+                onClick={toggleTheme}
                 className="p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                aria-label="Toggle theme"
               >
-                {darkMode ? '☀️' : '🌙'}
+                {isDark ? '☀️' : '🌙'}
               </button>
-              
+
               {/* Auth Buttons */}
               <div className="flex items-center space-x-4">
                 {user ? (
@@ -205,7 +213,7 @@ const LandingPage = () => {
               <p className="mt-6 text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
                 {t('heroSubtitle')}
               </p>
-              
+
               <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 {user ? (
                   <Link to="/dashboard" className="btn-primary text-lg px-8 py-4">
@@ -265,7 +273,7 @@ const LandingPage = () => {
                     <div className="text-sm">Fast</div>
                   </div>
                 </div>
-                
+
                 {/* Floating elements */}
                 <div className="absolute -top-4 -right-4 w-8 h-8 bg-yellow-400 rounded-full animate-bounce"></div>
                 <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-green-400 rounded-full animate-pulse"></div>
@@ -289,7 +297,7 @@ const LandingPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 card-hover"
               >
@@ -381,7 +389,7 @@ const LandingPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-white dark:bg-gray-700 rounded-xl p-6 shadow-lg"
               >
@@ -414,7 +422,7 @@ const LandingPage = () => {
           <p className="text-xl text-blue-100 mb-8">
             {t('newsletter.subtitle')}
           </p>
-          
+
           {isSubscribed ? (
             <div className="bg-green-500 text-white px-6 py-4 rounded-lg inline-block">
               🎉 Thank you for subscribing! We'll keep you updated.
@@ -478,7 +486,7 @@ const LandingPage = () => {
                 Empowering SACCOs with blockchain technology for transparent and efficient financial services.
               </p>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-gray-400">
@@ -488,7 +496,7 @@ const LandingPage = () => {
                 <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400">
@@ -498,7 +506,7 @@ const LandingPage = () => {
                 <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-gray-400">
@@ -508,7 +516,7 @@ const LandingPage = () => {
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400">
               © 2024 SACCOChain. {t('footer.rights')}
@@ -530,7 +538,7 @@ const LandingPage = () => {
             <div className="bg-blue-600 text-white p-4 rounded-t-lg">
               <div className="flex justify-between items-center">
                 <h3 className="font-semibold">SACCOChain Assistant</h3>
-                <button 
+                <button
                   onClick={() => setShowChatbot(false)}
                   className="text-white hover:text-gray-200"
                 >
@@ -538,7 +546,7 @@ const LandingPage = () => {
                 </button>
               </div>
             </div>
-            
+
             {/* Chat Messages */}
             <div className="flex-1 p-4 overflow-y-auto">
               <div className="space-y-4">
@@ -547,7 +555,7 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Chat Input */}
             <div className="p-4 border-t border-gray-200 dark:border-gray-700">
               <div className="flex space-x-2">
@@ -564,14 +572,9 @@ const LandingPage = () => {
           </div>
         </div>
       )}
-      
-      {/* Chatbot Toggle Button */}
-      <button
-        onClick={() => setShowChatbot(!showChatbot)}
-        className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors z-40"
-      >
-        💬
-      </button>
+
+      {/* Chatbot Widget */}
+      <ChatbotWidget />
     </div>
   );
 };

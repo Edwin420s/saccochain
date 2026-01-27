@@ -7,6 +7,7 @@ const saccoRoutes = require('./routes/sacco');
 const scoreRoutes = require('./routes/score');
 const suiRoutes = require('./routes/sui');
 const newsletterRoutes = require('./routes/newsletter');
+const verificationRoutes = require('./routes/verification');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/sacco', saccoRoutes);
 app.use('/api/score', scoreRoutes);
 app.use('/api/sui', suiRoutes);
 app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/verification', verificationRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

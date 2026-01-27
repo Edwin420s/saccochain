@@ -1,38 +1,49 @@
-import React, { createContext, useContext, useEffect } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error('useTheme must be used within ThemeProvider');
   }
   return context;
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useLocalStorage('saccochain_theme', 'light');
+  const [theme, setTheme] = useState(() => {
+    // Check localStorage first
+    const saved = localStorage.getItem('saccochain-theme');
+    if (saved) return saved;
+
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+
+    return 'light';
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
-    
+
+    // Remove previous theme
     root.classList.remove('light', 'dark');
+
+    // Add current theme
     root.classList.add(theme);
-    
-    // Update meta theme-color for mobile browsers
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', theme === 'dark' ? '#1f2937' : '#ffffff');
-    }
+
+    // Save to localStorage
+    localStorage.setItem('saccochain-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
   const value = {
     theme,
+    setTheme,
     toggleTheme,
     isDark: theme === 'dark'
   };

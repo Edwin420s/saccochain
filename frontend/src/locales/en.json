@@ -3,7 +3,12 @@
     "dashboard": "Dashboard",
     "admin": "Admin",
     "profile": "Your Profile",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "home": "Home",
+    "about": "About",
+    "features": "Features",
+    "technology": "Technology",
+    "contact": "Contact"
   },
   "login": {
     "title": "Sign in to your account",
@@ -28,32 +33,107 @@
     "passwordTooShort": "Password must be at least 6 characters"
   },
   "heroTitle": "Empowering SACCOs with Blockchain-Powered Trust",
-  "heroSubtitle": "Transparent savings, smart loans, and immutable records for Kenya's next-gen SACCOs",
+  "heroSubtitle": "Build portable credit reputations, prevent duplicate borrowing, and create transparent SACCO networks across Kenya",
   "getStarted": "Get Started",
   "watchDemo": "Watch Demo",
+  "learnMore": "Learn More",
   "features": "Features",
-  "features": {
+  "featuresSection": {
+    "title": "Powerful Features for Modern SACCOs",
+    "subtitle": "Everything you need to modernize your SACCO operations and empower your members",
+    "interSacco": {
+      "title": "Inter-SACCO Credit Network",
+      "description": "Verify member credit across multiple SACCOs instantly - preventing duplicate borrowing and fraud"
+    },
     "hybridBlockchain": {
-      "title": "Hybrid Blockchain",
-      "description": "Combines on-chain transparency with off-chain efficiency for secure and fast operations"
+      "title": "Hybrid Blockchain Architecture",
+      "description": "Combines off-chain efficiency for speed and privacy with on-chain transparency for trust and verification"
     },
     "smartLoans": {
-      "title": "Smart Loan Processing",
-      "description": "AI-powered loan approvals with blockchain-verified credit history"
+      "title": "Smart Loan Management",
+      "description": "AI-powered loan approvals with automated workflows and blockchain-verified agreements"
     },
     "creditScoring": {
-      "title": "Advanced Credit Scoring",
-      "description": "Machine learning models that analyze financial behavior for accurate risk assessment"
+      "title": "AI Credit Scoring",
+      "description": "Machine learning models analyze savings patterns, repayment history, and transaction behavior for accurate risk assessment"
+    },
+    "dataPrivacy": {
+      "title": "Privacy-Preserving Design",
+      "description": "Only cryptographic hashes stored on-chain. Personal data stays secure in your SACCO database"
+    },
+    "portableCredit": {
+      "title": "Portable Credit History",
+      "description": "Members build verified reputation across all SACCOs - no more starting from zero"
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Simple steps to transform your SACCO experience",
+    "step1": {
+      "title": "Join & Connect",
+      "description": "Register your SACCO and connect members' digital wallets to start building credit history",
+      "number": "1"
+    },
+    "step2": {
+      "title": "Save & Build Credit",
+      "description": "Every deposit and repayment is tracked securely, building a verifiable credit reputation",
+      "number": "2"
+    },
+    "step3": {
+      "title": "Instant Verification",
+      "description": "Verify borrowers across SACCOs in under 2 seconds using blockchain proofs",
+      "number": "3"
+    },
+    "step4": {
+      "title": "Smart Decisions",
+      "description": "AI-powered insights help SACCOs make data-driven lending decisions with confidence",
+      "number": "4"
     }
   },
   "newsletter": {
-    "title": "Stay Updated",
-    "subtitle": "Get the latest news about SACCOChain and blockchain innovation in finance",
-    "placeholder": "Enter your email",
-    "subscribe": "Subscribe"
+    "title": "Stay Updated with SACCOChain",
+    "subtitle": "Get the latest updates on SACCO digital transformation and blockchain innovation",
+    "placeholder": "Enter your email address",
+    "subscribe": "Subscribe",
+    "success": "Thank you for subscribing! Check your email.",
+    "error": "Subscription failed. Please try again."
+  },
+  "chatbot": {
+    "title": "SACCOChain Assistant",
+    "greeting": "Hello! How can I help you with SACCOChain today?",
+    "placeholder": "Type your question...",
+    "send": "Send",
+    "defaultResponses": {
+      "how_register": "To register your SACCO, click 'Get Started' and fill in your SACCO details including license number.",
+      "what_blockchain": "We use Sui blockchain to store verifiable credit proofs while keeping personal data off-chain for privacy.",
+      "cost": "Pricing starts at KES 3,000/month for small SACCOs. Contact us for a custom quote.",
+      "integration": "Yes! We provide APIs for easy integration with existing SACCO management systems."
+    }
   },
   "footer": {
-    "rights": "All rights reserved"
+    "tagline": "Building trust in Kenya's SACCO ecosystem through blockchain technology",
+    "rights": "All rights reserved",
+    "product": "Product",
+    "company": "Company",
+    "support": "Support",
+    "legal": "Legal"
+  },
+  "stats": {
+    "saccos": "100+",
+    "saccosLabel": "SACCOs Ready",
+    "members": "10K+",
+    "membersLabel": "Members Served",
+    "processed": "$5M+",
+    "processedLabel": "Loans Processed",
+    "verification": "<2s",
+    "verificationLabel": "Verification Time"
+  },
+  "cta": {
+    "primary": "Transform Your SACCO Today",
+    "secondary": "Join hundreds of SACCOs building the future of cooperative finance",
+    "demoButton": "Request Demo",
+    "signupSacco": "Sign Up as SACCO",
+    "signupMember": "Join as Member"
   },
   "dashboard": {
     "welcome": "Welcome back, {{name}}!",
@@ -78,7 +158,10 @@
     "totalUsers": "Total Users",
     "totalTransactions": "Total Transactions",
     "averageCreditScore": "Average Credit Score",
-    "recentRegistrations": "Recent Registrations"
+    "recentRegistrations": "Recent Registrations",
+    "verifyMember": "Verify Member",
+    "verificationTitle": "Inter-SACCO Credit Verification",
+    "verificationDescription": "Verify member credit history across all registered SACCOs"
   },
   "wallet": {
     "connect": "Connect Wallet",

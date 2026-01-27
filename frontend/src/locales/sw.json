@@ -3,100 +3,183 @@
     "dashboard": "Dashibodi",
     "admin": "Msimamizi",
     "profile": "Wasifu Wako",
-    "signOut": "Toka"
+    "signOut": "Toka",
+    "home": "Nyumbani",
+    "about": "Kuhusu",
+    "features": "Huduma",
+    "technology": "Teknolojia",
+    "contact": "Wasiliana"
   },
   "login": {
     "title": "Ingia kwenye akaunti yako",
     "subtitle": "Au",
     "createAccount": "unda akaunti mpya",
-    "email": "Anwani ya barua pepe",
-    "password": "Nenosiri",
+    "email": "Barua pepe",
+    "password": "Nywila",
     "signIn": "Ingia"
   },
   "register": {
-    "title": "Undi akaunti yako",
+    "title": "Unda akaunti yako",
     "subtitle": "Au",
     "signIn": "ingia kwenye akaunti yako",
     "fullName": "Jina kamili",
-    "email": "Anwani ya barua pepe",
-    "nationalId": "Kitambulisho cha taifa",
-    "saccoId": "Kitambulisho cha SACCO (Hiari)",
-    "password": "Nenosiri",
-    "confirmPassword": "Thibitisha nenosiri",
-    "createAccount": "Undi akaunti",
-    "passwordsNoMatch": "Nenosiri halifanani",
-    "passwordTooShort": "Nenosiri lazima liwe na herufi angalau 6"
+    "email": "Barua pepe",
+    "nationalId": "Kitambulisho cha Taifa",
+    "saccoId": "Kitambulisho cha SACCO (Si lazima)",
+    "password": "Nywila",
+    "confirmPassword": "Thibitisha nywila",
+    "createAccount": "Unda akaunti",
+    "passwordsNoMatch": "Nywila hazifanani",
+    "passwordTooShort": "Nywila lazima iwe na angalau herufi 6"
   },
-  "heroTitle": "Kuwawezesha SACCOs kwa Imara ya Blockchain",
-  "heroSubtitle": "Akiba uwazi, mikopo mahiri, na rekodi zisizoharibika kwa SACCOs za Kenya",
+  "heroTitle": "Kuimarisha SACCO kwa Uaminifu wa Blockchain",
+  "heroSubtitle": "Jenga historia ya mkopo inayoweza kuhamishwa, zuia ukopaji mara kwa mara, na unda mitandao ya SACCO zenye uwazi nchini Kenya",
   "getStarted": "Anza Sasa",
-  "watchDemo": "Tazama Onyesho",
-  "features": "Vipengele",
-  "features": {
+  "watchDemo": "Angalia Onyesho",
+  "learnMore": "Jifunze Zaidi",
+  "features": "Huduma",
+  "featuresSection": {
+    "title": "Huduma Madhubuti kwa SACCO za Kisasa",
+    "subtitle": "Kila kitu unachohitaji kuendeleza shughuli za SACCO yako na kuwawezesha wanachama",
+    "interSacco": {
+      "title": "Mtandao wa Mikopo wa SACCO Mbalimbali",
+      "description": "Thibitisha mkopo wa mwanachama katika SACCO nyingi mara moja - kuzuia ukopaji mara kwa mara na ulaghai"
+    },
     "hybridBlockchain": {
-      "title": "Blockchain Mseto",
-      "description": "Inachanganya uwazi wa blockchain na ufanisi wa mfumo wa kawaida kwa operesheni salama na za haraka"
+      "title": "Usanifu wa Blockchain ya Mseto",
+      "description": "Inachanganya ufanisi wa nje ya mtandao kwa kasi na faragha na uwazi wa kwenye mtandao kwa uaminifu na uthibitishaji"
     },
     "smartLoans": {
-      "title": "Mikopo Mahiri",
-      "description": "Mikopo inayoidhinishwa na AI kwa historia ya mikopo iliyothibitishwa na blockchain"
+      "title": "Usimamizi wa Mikopo Mahiri",
+      "description": "Idhini za mikopo zinazotumia AI na mifumo ya kazi otomatiki pamoja na mikataba iliyothibitishwa na blockchain"
     },
     "creditScoring": {
-      "title": "Makadirio ya Mikopo",
-      "description": "Miundo ya machine learning inayochambua tabia ya kifedha kwa makadirio sahihi ya hatari"
+      "title": "Ukadiriaji wa Mkopo wa AI",
+      "description": "Mifano ya kujifunza mashine inayochanganua mifumo ya akiba, historia ya ulipaji, na tabia za miamala kwa tathmini sahihi ya hatari"
+    },
+    "dataPrivacy": {
+      "title": "Usanifu Unaolinda Faragha",
+      "description": "Ni hashi za kriptografia tu zinazohifadhiwa kwenye mtandao. Data binafsi inabaki salama kwenye hifadhidata ya SACCO yako"
+    },
+    "portableCredit": {
+      "title": "Historia ya Mkopo Inayoweza Kuhamishwa",
+      "description": "Wanachama wanajenga sifa iliyothibitishwa katika SACCO zote - hakuna tena kuanza kutoka sifuri"
+    }
+  },
+  "howItWorks": {
+    "title": "Jinsi Inavyofanya Kazi",
+    "subtitle": "Hatua rahisi za kubadilisha uzoefu wako wa SACCO",
+    "step1": {
+      "title": "Jiunge na Unganisha",
+      "description": "Sajili SACCO yako na unganisha pochi za kidijitali za wanachama ili kuanza kujenga historia ya mkopo",
+      "number": "1"
+    },
+    "step2": {
+      "title": "Hifadhi na Jenga Mkopo",
+      "description": "Kila amana na malipo yanafuatiliwa kwa usalama, kujenga sifa ya mkopo inayoweza kuthibitishwa",
+      "number": "2"
+    },
+    "step3": {
+      "title": "Uthibitisho wa Papo Hapo",
+      "description": "Thibitisha wakopaji katika SACCO zote kwa chini ya sekunde 2 kwa kutumia ushahidi wa blockchain",
+      "number": "3"
+    },
+    "step4": {
+      "title": "Maamuzi Mahiri",
+      "description": "Maarifa yanayotumia AI yanasaidia SACCO kufanya maamuzi ya mikopo yanayotegemea data kwa ujasiri",
+      "number": "4"
     }
   },
   "newsletter": {
-    "title": "Kaa Umefahamu",
-    "subtitle": "Pata habari za hivi punde kuhusu SACCOChain na uvumbuzi wa blockchain kwenye fedha",
-    "placeholder": "Weka barua pepe yako",
-    "subscribe": "Jiandikishe"
+    "title": "Pata Habari Mpya kutoka SACCOChain",
+    "subtitle": "Pata habari za hivi karibuni kuhusu kubadilisha kidijitali kwa SACCO na uvumbuzi wa blockchain",
+    "placeholder": "Ingiza barua pepe yako",
+    "subscribe": "Jisajili",
+    "success": "Asante kwa kujisajili! Angalia barua pepe yako.",
+    "error": "Usajili umeshindwa. Tafadhali jaribu tena."
+  },
+  "chatbot": {
+    "title": "Msaidizi wa SACCOChain",
+    "greeting": "Habari! Ninawezaje kukusaidia kuhusu SACCOChain leo?",
+    "placeholder": "Andika swali lako...",
+    "send": "Tuma",
+    "defaultResponses": {
+      "how_register": "Ili kusajili SACCO yako, bonyeza 'Anza Sasa' na jaza maelezo ya SACCO yako ikiwa ni pamoja na nambari ya leseni.",
+      "what_blockchain": "Tunatumia blockchain ya Sui kuhifadhi ushahidi wa mkopo unaoweza kuthibitishwa huku tukiweka data binafsi nje ya mtandao kwa faragha.",
+      "cost": "Bei inaanzia KES 3,000 kwa mwezi kwa SACCO ndogo. Wasiliana nasi kupata bei maalum.",
+      "integration": "Ndio! Tunatoa API kwa uunganishaji rahisi na mifumo ya usimamizi wa SACCO iliyopo."
+    }
   },
   "footer": {
-    "rights": "Haki zote zimehifadhiwa"
+    "tagline": "Kujenga uaminifu katika mfumo wa SACCO wa Kenya kupitia teknolojia ya blockchain",
+    "rights": "Haki zote zimehifadhiwa",
+    "product": "Bidhaa",
+    "company": "Kampuni",
+    "support": "Msaada",
+    "legal": "Kisheria"
+  },
+  "stats": {
+    "saccos": "100+",
+    "saccosLabel": "SACCO Tayari",
+    "members": "10K+",
+    "membersLabel": "Wanachama Wanaotumikia",
+    "processed": "$5M+",
+    "processedLabel": "Mikopo Iliyochakatwa",
+    "verification": "<2s",
+    "verificationLabel": "Muda wa Uthibitisho"
+  },
+  "cta": {
+    "primary": "Badilisha SACCO Yako Leo",
+    "secondary": "Jiunge na mamia ya SACCO zinazoj enga mustakabali wa fedha za ushirikiano",
+    "demoButton": "Omba Onyesho",
+    "signupSacco": "Jisajili kama SACCO",
+    "signupMember": "Jiunge kama Mwanachama"
   },
   "dashboard": {
     "welcome": "Karibu tena, {{name}}!",
-    "overview": "Hapa kuna muhtasari wa kifedha wako",
-    "creditScore": "Alama ya Mikopo",
+    "overview": "Hii ni muhtasari wako wa kifedha",
+    "creditScore": "Alama ya Mkopo",
     "quickStats": "Takwimu za Haraka",
-    "totalTransactions": "Jumla ya Manunuzi",
+    "totalTransactions": "Jumla ya Miamala",
     "memberSince": "Mwanachama Tangu",
-    "blockchainVerification": "Uthibitishaji wa Blockchain",
-    "scoreVerified": "Alama imethibitishwa kwenye blockchain",
-    "pendingVerification": "Inasubiri uthibitishaji wa blockchain",
+    "blockchainVerification": "Uthibitisho wa Blockchain",
+    "scoreVerified": "Alama imethibitishwa kwenye mtandao",
+    "pendingVerification": "Inasubiri uthibitisho wa blockchain",
     "calculateNewScore": "Kokotoa Alama Mpya",
-    "noScore": "Hakuna alama ya mikopo iliyokokotolewa bado"
+    "noScore": "Hakuna alama ya mkopo iliyokokotolewa bado"
   },
   "admin": {
     "title": "Dashibodi ya Msimamizi",
-    "saccos": "SACCOs",
+    "saccos": "SACCO",
     "users": "Watumiaji",
-    "analytics": "Takwimu",
+    "analytics": "Uchanganuzi",
     "statistics": "Takwimu",
-    "totalSaccos": "Jumla ya SACCOs",
+    "totalSaccos": "Jumla ya SACCO",
     "totalUsers": "Jumla ya Watumiaji",
-    "totalTransactions": "Jumla ya Manunuzi",
-    "averageCreditScore": "Wastani wa Alama ya Mikopo",
-    "recentRegistrations": "Usajili wa Hivi Karibuni"
+    "totalTransactions": "Jumla ya Miamala",
+    "averageCreditScore": "Wastani wa Alama ya Mkopo",
+    "recentRegistrations": "Usajili wa Hivi Karibuni",
+    "verifyMember": "Thibitisha Mwanachama",
+    "verificationTitle": "Uthibitisho wa Mkopo wa SACCO M balimbali",
+    "verificationDescription": "Thibitisha historia ya mkopo wa mwanachama katika SACCO zote zilizosajiliwa"
   },
   "wallet": {
-    "connect": "Unganisha Wallet",
+    "connect": "Unganisha Pochi",
     "disconnect": "Tenganisha",
     "connected": "Imeunganishwa",
     "notConnected": "Haijaunganishwa",
-    "installWallet": "Tafadhali weka programu ya kuongeza wallet ya Sui"
+    "installWallet": "Tafadhali sakinisha kifaa cha pochi cha Sui"
   },
   "transaction": {
-    "create": "Unda Manunuzi",
+    "create": "Unda Muamala",
     "type": "Aina",
     "amount": "Kiasi",
     "description": "Maelezo",
     "date": "Tarehe",
     "status": "Hali",
     "deposit": "Amana",
-    "withdrawal": "Utoaji",
+    "withdrawal": "Uondoaji",
     "loan": "Mkopo",
-    "repayment": "Malipo"
+    "repayment": "Ulipaji"
   }
 }
